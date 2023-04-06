@@ -1,4 +1,5 @@
 #include <cart.h>
+
 typedef struct {
     char filename[1024];
     u32 rom_size;
@@ -168,13 +169,15 @@ bool cart_load(char *cart) {
     return true;
 }
 
-u8 cart_read(u16 address)
-{
-    //for now rom only type supported
+u8 cart_read(u16 address) {
+    //for now just ROM ONLY type supported...
+
     return ctx.rom_data[address];
 }
-void cart_write(u16 address, u8 value)
-{
-    not_impl
+
+void cart_write(u16 address, u8 value) {
+    //for now, ROM ONLY...
+
+    NO_IMPL
 }
 
