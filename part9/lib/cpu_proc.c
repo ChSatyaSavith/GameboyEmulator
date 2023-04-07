@@ -166,6 +166,83 @@ static void proc_cb(cpu_context *ctx) {
     NO_IMPL
 }
 
+static void proc_rlca(cpu_context *ctx) {
+    u8 u = ctx->regs.a;
+    bool c = (u >> 7) & 1;
+    u = (u << 1) | c;
+    ctx->regs.a = u;
+
+    cpu_set_flags(ctx, 0, 0, 0, c);
+}
+
+static void proc_rrca(cpu_context *ctx) {
+    u8 b = ctx->regs.a & 1;
+    ctx->regs.a >>= 1;
+    ctx->regs.a |= (b << 7);
+
+    cpu_set_flags(ctx, 0, 0, 0, b);
+}
+
+
+static void proc_rla(cpu_context *ctx) {
+    u8 u = ctx->regs.a;
+    u8 cf = CPU_FLAG_C;
+    u8 c = (u >> 7) & 1;
+
+    ctx->regs.a = (u << 1) | cf;
+    cpu_set_flags(ctx, 0, 0, 0, c);
+}
+
+static void proc_stop(cpu_context *ctx) {
+    fprintf(stderr, "STOPPING!\n");
+    NO_IMPL
+}
+
+static void proc_daa(cpu_context *ctx) {
+    u8 u = 0;
+    int fc = 0;
+
+    if (CPU_FLAG_H || (!CPU_FLAG_N && (ctx->regs.a & 0xF) > 9)) {
+        u = 6;
+    }
+
+    if (CPU_FLAG_C || (!CPU_FLAG_N && ctx->regs.a > 0x99)) {
+        u |= 0x60;
+        fc = 1;
+    }
+
+    ctx->regs.a += CPU_FLAG_N ? -u : u;
+
+    cpu_set_flags(ctx, ctx->regs.a == 0, -1, 0, fc);
+}
+
+static void proc_cpl(cpu_context *ctx) {
+    ctx->regs.a = ~ctx->regs.a;
+    cpu_set_flags(ctx, -1, 1, 1, -1);
+}
+
+static void proc_scf(cpu_context *ctx) {
+    cpu_set_flags(ctx, -1, 0, 0, 1);
+}
+
+static void proc_ccf(cpu_context *ctx) {
+    cpu_set_flags(ctx, -1, 0, 0, CPU_FLAG_C ^ 1);
+}
+
+static void proc_halt(cpu_context *ctx) {
+    ctx->halted = true;
+}
+
+static void proc_rra(cpu_context *ctx) {
+    u8 carry = CPU_FLAG_C;
+    u8 new_c = ctx->regs.a & 1;
+
+    ctx->regs.a >>= 1;
+    ctx->regs.a |= (carry << 7);
+
+    cpu_set_flags(ctx, 0, 0, 0, new_c);
+}
+
 static void proc_and(cpu_context *ctx) {
     ctx->regs.a &= ctx->fetched_data;
     cpu_set_flags(ctx, ctx->regs.a == 0, 0, 1, 0);
@@ -190,6 +267,10 @@ static void proc_cp(cpu_context *ctx) {
 
 static void proc_di(cpu_context *ctx) {
     ctx->int_master_enabled = false;
+}
+
+static void proc_ei(cpu_context *ctx) {
+    ctx->enabling_ime = true;
 }
 
 static bool is_16_bit(reg_type rt) {
@@ -476,6 +557,17 @@ static IN_PROC processors[] = {
     [IN_OR] = proc_or,
     [IN_CP] = proc_cp,
     [IN_CB] = proc_cb,
+    [IN_RRCA] = proc_rrca,
+    [IN_RLCA] = proc_rlca,
+    [IN_RRA] = proc_rra,
+    [IN_RLA] = proc_rla,
+    [IN_STOP] = proc_stop,
+    [IN_HALT] = proc_halt,
+    [IN_DAA] = proc_daa,
+    [IN_CPL] = proc_cpl,
+    [IN_SCF] = proc_scf,
+    [IN_CCF] = proc_ccf,
+    [IN_EI] = proc_ei,
     [IN_RETI] = proc_reti
 };
 
