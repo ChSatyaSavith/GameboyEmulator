@@ -105,7 +105,35 @@ static void proc_jp(cpu_context *ctx) {
         emu_cycles(1);
     }
 }
+static void proc_pop(cpu_context *ctx)
+{
+    u16 lo = stack_pop();
+    emu_cycles(1);
+    u16 hi = stack_pop();
+    emu_cycles(1);
 
+    u16 n = (hi<<8) | lo;
+
+    cpu_set_reg(ctx->cur_inst->reg_1,n);
+
+    if(ctx->cur_inst->reg_1 == RT_AF)
+    {
+        cpu_set_reg(ctx->cur_inst->reg_1,n & 0xFFF0);
+    }
+}
+
+static void proc_push(cpu_context *ctx)
+{
+    u16 hi = (cpu_read_reg(ctx->cur_inst->reg_1)>>8) & 0xFF;
+    emu_cycles(1);
+    stack_push(hi);
+
+    u16 lo = cpu_read_reg(ctx->cur_inst->reg_2)& 0xFF;
+    emu_cycles(1);
+    stack_push(lo);
+
+    emu_cycles(1);
+}
 static IN_PROC processors[] = {
     [IN_NONE] = proc_none,
     [IN_NOP] = proc_nop,
@@ -113,6 +141,8 @@ static IN_PROC processors[] = {
     [IN_LDH] = proc_ldh,
     [IN_JP] = proc_jp,
     [IN_DI] = proc_di,
+    [IN_POP] = proc_pop,
+    [IN_PUSH] = proc_push,
     [IN_XOR] = proc_xor
 
 };
