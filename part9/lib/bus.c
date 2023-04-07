@@ -3,6 +3,8 @@
 #include <ram.h>
 #include <cpu.h>
 #include <io.h>
+#include <ppu.h>
+#include <dma.h>
 
 // 0x0000 - 0x3FFF : ROM Bank 0
 // 0x4000 - 0x7FFF : ROM Bank 1 - Switchable
@@ -24,9 +26,7 @@ u8 bus_read(u16 address) {
         return cart_read(address);
     } else if (address < 0xA000) {
         //Char/Map Data
-        //TODO
-        printf("UNSUPPORTED bus_read(%04X)\n", address);
-        NO_IMPL
+        return ppu_vram_read(address);
     } else if (address < 0xC000) {
         //Cartridge RAM
         return cart_read(address);
@@ -38,22 +38,19 @@ u8 bus_read(u16 address) {
         return 0;
     } else if (address < 0xFEA0) {
         //OAM
-        //TODO
-        printf("UNSUPPORTED bus_read(%04X)\n", address);
-        //NO_IMPL
-        return 0x0;
+        if (dma_transferring()) {
+            return 0xFF;
+        }
+
+        return ppu_oam_read(address);
     } else if (address < 0xFF00) {
         //reserved unusable...
         return 0;
     } else if (address < 0xFF80) {
         //IO Registers...
-        //TODO
-        
-        //NO_IMPL
         return io_read(address);
     } else if (address == 0xFFFF) {
         //CPU ENABLE REGISTER...
-        //TODO
         return cpu_get_ie_register();
     }
 
@@ -67,9 +64,7 @@ void bus_write(u16 address, u8 value) {
         cart_write(address, value);
     } else if (address < 0xA000) {
         //Char/Map Data
-        //TODO
-        printf("UNSUPPORTED bus_write(%04X)\n", address);
-        //NO_IMPL
+        ppu_vram_write(address, value);
     } else if (address < 0xC000) {
         //EXT-RAM
         cart_write(address, value);
@@ -80,17 +75,16 @@ void bus_write(u16 address, u8 value) {
         //reserved echo ram
     } else if (address < 0xFEA0) {
         //OAM
-
-        //TODO
-        printf("UNSUPPORTED bus_write(%04X)\n", address);
-       // NO_IMPL
+        if (dma_transferring()) {
+            return;
+        }
+        
+        ppu_oam_write(address, value);
     } else if (address < 0xFF00) {
         //unusable reserved
     } else if (address < 0xFF80) {
         //IO Registers...
-        //TODO
         io_write(address, value);
-        //NO_IMPL
     } else if (address == 0xFFFF) {
         //CPU SET ENABLE REGISTER
         

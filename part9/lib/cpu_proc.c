@@ -303,7 +303,7 @@ static void proc_ld(cpu_context *ctx) {
 
         cpu_set_flags(ctx, 0, 0, hflag, cflag);
         cpu_set_reg(ctx->cur_inst->reg_1, 
-            cpu_read_reg(ctx->cur_inst->reg_2) + (char)ctx->fetched_data);
+            cpu_read_reg(ctx->cur_inst->reg_2) + (int8_t)ctx->fetched_data);
 
         return;
     }
@@ -354,9 +354,8 @@ static void proc_jp(cpu_context *ctx) {
 }
 
 static void proc_jr(cpu_context *ctx) {
-    int8_t rel = (char)(ctx->fetched_data & 0xFF);
+    int8_t rel = (int8_t)(ctx->fetched_data & 0xFF);
     u16 addr = ctx->regs.pc + rel;
-
     goto_addr(ctx, addr, false);
 }
 
@@ -510,7 +509,7 @@ static void proc_add(cpu_context *ctx) {
     }
 
     if (ctx->cur_inst->reg_1 == RT_SP) {
-        val = cpu_read_reg(ctx->cur_inst->reg_1) + (char)ctx->fetched_data;
+        val = cpu_read_reg(ctx->cur_inst->reg_1) + (int8_t)ctx->fetched_data;
     }
 
     int z = (val & 0xFF) == 0;
