@@ -195,7 +195,6 @@ static void proc_rla(cpu_context *ctx) {
 
 static void proc_stop(cpu_context *ctx) {
     fprintf(stderr, "STOPPING!\n");
-    //NO_IMPL
 }
 
 static void proc_daa(cpu_context *ctx) {

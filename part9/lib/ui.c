@@ -162,6 +162,7 @@ void ui_on_key(bool down, u32 key_code) {
         case SDLK_LEFT: gamepad_get_state()->left = down; break;
         case SDLK_RIGHT: gamepad_get_state()->right = down; break;
     }
+
 }
 
 void ui_handle_events() {

@@ -32,11 +32,14 @@ u8 gamepad_get_output() {
     if (!gamepad_button_sel()) {
         if (gamepad_get_state()->start) {
             output &= ~(1 << 3);
-        } else if (gamepad_get_state()->select) {
+        } 
+        if (gamepad_get_state()->select) {
             output &= ~(1 << 2);
-        } else if (gamepad_get_state()->a) {
+        } 
+        if (gamepad_get_state()->a) {
             output &= ~(1 << 0);
-        } else if (gamepad_get_state()->b) {
+        } 
+        if (gamepad_get_state()->b) {
             output &= ~(1 << 1);
         }
     }
@@ -44,11 +47,14 @@ u8 gamepad_get_output() {
     if (!gamepad_dir_sel()) {
         if (gamepad_get_state()->left) {
             output &= ~(1 << 1);
-        } else if (gamepad_get_state()->right) {
+        } 
+        if (gamepad_get_state()->right) {
             output &= ~(1 << 0);
-        } else if (gamepad_get_state()->up) {
+        } 
+        if (gamepad_get_state()->up) {
             output &= ~(1 << 2);
-        } else if (gamepad_get_state()->down) {
+        } 
+        if (gamepad_get_state()->down) {
             output &= ~(1 << 3);
         }
     }

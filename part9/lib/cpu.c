@@ -7,7 +7,7 @@
 
 cpu_context ctx = {0};
 
-#define CPU_DEBUG 1
+#define CPU_DEBUG 0
 
 void cpu_init() {
     ctx.regs.pc = 0x100;
