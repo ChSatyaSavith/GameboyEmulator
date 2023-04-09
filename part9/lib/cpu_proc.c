@@ -5,7 +5,7 @@
 
 //processes CPU instructions...
 
-void cpu_set_flags(cpu_context *ctx, int8_t z, int8_t n, int8_t h, int8_t c) {
+void cpu_set_flags(cpu_context *ctx, char z, char n, char h, char c) {
     if (z != -1) {
         BIT_SET(ctx->regs.f, 7, z);
     }
@@ -24,7 +24,8 @@ void cpu_set_flags(cpu_context *ctx, int8_t z, int8_t n, int8_t h, int8_t c) {
 }
 
 static void proc_none(cpu_context *ctx) {
-    printf("INVALID INSTRUCTION!\n");
+    
+    printf("INVALID INSTRUCTION! %2X\n", ctx->cur_opcode);
     exit(-7);
 }
 
