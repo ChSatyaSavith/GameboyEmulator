@@ -1,6 +1,7 @@
 #include <ui.h>
 #include <emu.h>
 #include <bus.h>
+#include <ppu.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -25,6 +26,16 @@ void ui_init() {
     printf("TTF INIT\n");
 
     SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &sdlWindow, &sdlRenderer);
+
+    screen = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32,
+                                            0x00FF0000,
+                                            0x0000FF00,
+                                            0x000000FF,
+                                            0xFF000000);
+    sdlTexture = SDL_CreateTexture(sdlRenderer,
+                                                SDL_PIXELFORMAT_ARGB8888,
+                                                SDL_TEXTUREACCESS_STREAMING,
+                                                SCREEN_WIDTH, SCREEN_HEIGHT);
 
     SDL_CreateWindowAndRenderer(16 * 8 * scale, 32 * 8 * scale, 0, 
         &sdlDebugWindow, &sdlDebugRenderer);
@@ -113,6 +124,28 @@ void update_dbg_window() {
 }
 
 void ui_update() {
+    SDL_Rect rc;
+    rc.x = rc.y = 0;
+    rc.w = rc.h = 2048;
+
+    u32 *video_buffer = ppu_get_context()->video_buffer;
+
+    for (int line_num = 0; line_num < YRES; line_num++) {
+        for (int x = 0; x < XRES; x++) {
+            rc.x = x * scale;
+            rc.y = line_num * scale;
+            rc.w = scale;
+            rc.h = scale;
+
+            SDL_FillRect(screen, &rc, video_buffer[x + (line_num * XRES)]);
+        }
+    }
+
+    SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
+    SDL_RenderClear(sdlRenderer);
+    SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+    SDL_RenderPresent(sdlRenderer);
+
     update_dbg_window();
 }
 
