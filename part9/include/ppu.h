@@ -80,6 +80,7 @@ typedef struct {
 
     u8 fetched_entry_count;
     oam_entry fetched_entries[3]; //entries fetched during pipeline.
+    u8 window_line;
 
     u32 current_frame;
     u32 line_ticks;

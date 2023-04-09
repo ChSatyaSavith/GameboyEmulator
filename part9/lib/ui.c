@@ -2,6 +2,7 @@
 #include <emu.h>
 #include <bus.h>
 #include <ppu.h>
+#include <gamepad.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -149,13 +150,31 @@ void ui_update() {
     update_dbg_window();
 }
 
+void ui_on_key(bool down, u32 key_code) {
+
+    switch(key_code) {
+        case SDLK_z: gamepad_get_state()->b = down; break;
+        case SDLK_x: gamepad_get_state()->a = down; break;
+        case SDLK_RETURN: gamepad_get_state()->start = down; break;
+        case SDLK_TAB: gamepad_get_state()->select = down; break;
+        case SDLK_UP: gamepad_get_state()->up = down; break;
+        case SDLK_DOWN: gamepad_get_state()->down = down; break;
+        case SDLK_LEFT: gamepad_get_state()->left = down; break;
+        case SDLK_RIGHT: gamepad_get_state()->right = down; break;
+    }
+}
+
 void ui_handle_events() {
     SDL_Event e;
     while (SDL_PollEvent(&e) > 0)
     {
-        //TODO SDL_UpdateWindowSurface(sdlWindow);
-        //TODO SDL_UpdateWindowSurface(sdlTraceWindow);
-        //TODO SDL_UpdateWindowSurface(sdlDebugWindow);
+        if (e.type == SDL_KEYDOWN) {
+            ui_on_key(true, e.key.keysym.sym);
+        }
+
+        if (e.type == SDL_KEYUP) {
+            ui_on_key(false, e.key.keysym.sym);
+        }
 
         if (e.type == SDL_WINDOWEVENT && e.window.event == SDL_WINDOWEVENT_CLOSE) {
             emu_get_context()->die = true;

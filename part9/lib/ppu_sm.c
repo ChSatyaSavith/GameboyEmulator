@@ -8,6 +8,8 @@ void pipeline_fifo_reset();
 void pipeline_process();
 
 void increment_ly() {
+
+    if(window_visible() && lcd_get_context()->ly >= lcd_get_context()->win_y && lcd_get_context)
     lcd_get_context()->ly++;
 
     if (lcd_get_context()->ly == lcd_get_context()->ly_compare) {
