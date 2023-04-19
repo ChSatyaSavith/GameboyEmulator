@@ -2,7 +2,8 @@
 
 #include <common.h>
 
-typedef struct {
+typedef struct 
+{
     bool start;
     bool select;
     bool a;

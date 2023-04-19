@@ -7,7 +7,8 @@ static const int TICKS_PER_LINE = 456;
 static const int YRES = 144;
 static const int XRES = 160;
 
-typedef enum {
+typedef enum 
+{
     FS_TILE,
     FS_DATA0,
     FS_DATA1,
@@ -15,18 +16,21 @@ typedef enum {
     FS_PUSH
 } fetch_state;
 
-typedef struct _fifo_entry {
+typedef struct _fifo_entry 
+{
     struct _fifo_entry *next;
     u32 value; //32 bit color value.
 } fifo_entry;
 
-typedef struct {
+typedef struct 
+{
     fifo_entry *head;
     fifo_entry *tail;
     u32 size;
 } fifo;
 
-typedef struct {
+typedef struct 
+{
     fetch_state cur_fetch_state;
     fifo pixel_fifo;
     u8 line_x;
@@ -40,7 +44,8 @@ typedef struct {
     u8 fifo_x;
 } pixel_fifo_context;
 
-typedef struct {
+typedef struct 
+{
     u8 y;
     u8 x;
     u8 tile;
@@ -63,12 +68,14 @@ typedef struct {
  Bit2-0 Palette number  **CGB Mode Only**     (OBP0-7)
  */
 
-typedef struct _oam_line_entry {
+typedef struct _oam_line_entry 
+{
     oam_entry entry;
     struct _oam_line_entry *next;
 } oam_line_entry;
 
-typedef struct {
+typedef struct 
+{
     oam_entry oam_ram[40];
     u8 vram[0x2000];
 

@@ -3,7 +3,8 @@
 
 #include <cpu.h>
 
-typedef enum {
+typedef enum 
+{
     IT_VBLANK = 1,
     IT_LCD_STAT = 2,
     IT_TIMER = 4,

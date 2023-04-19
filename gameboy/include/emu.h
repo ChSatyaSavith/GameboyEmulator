@@ -2,7 +2,8 @@
 
 #include <common.h>
 
-typedef struct {
+typedef struct 
+{
     bool paused;
     bool running;
     bool die;

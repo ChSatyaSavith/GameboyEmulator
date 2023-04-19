@@ -3,7 +3,8 @@
 #include <common.h>
 #include <instructions.h>
 
-typedef struct {
+typedef struct 
+{
     u8 a;
     u8 f;
     u8 b;
@@ -16,7 +17,8 @@ typedef struct {
     u16 sp;
 } cpu_registers;
 
-typedef struct {
+typedef struct 
+{
     cpu_registers regs;
 
     //current fetch...

@@ -2,7 +2,8 @@
 
 #include <common.h>
 
-typedef enum {
+typedef enum 
+{
     AM_IMP,
     AM_R_D16,
     AM_R_R,
@@ -26,7 +27,8 @@ typedef enum {
     AM_R_A16
 } addr_mode;
 
-typedef enum {
+typedef enum 
+{
     RT_NONE,
     RT_A,
     RT_F,
@@ -44,7 +46,8 @@ typedef enum {
     RT_PC
 } reg_type;
 
-typedef enum {
+typedef enum 
+{
     IN_NONE,
     IN_NOP,
     IN_LD,
@@ -96,11 +99,13 @@ typedef enum {
     IN_SET
 } in_type;
 
-typedef enum {
+typedef enum 
+{
     CT_NONE, CT_NZ, CT_Z, CT_NC, CT_C
 } cond_type;
 
-typedef struct {
+typedef struct 
+{
     in_type type;
     addr_mode mode;
     reg_type reg_1;

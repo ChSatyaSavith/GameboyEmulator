@@ -2,7 +2,8 @@
 
 #include <common.h>
 
-typedef struct {
+typedef struct 
+{
     u16 div;
     u8 tima;
     u8 tma;

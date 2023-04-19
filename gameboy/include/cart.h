@@ -2,7 +2,8 @@
 
 #include <common.h>
 
-typedef struct {
+typedef struct 
+{
     u8 entry[4];
     u8 logo[0x30];
 

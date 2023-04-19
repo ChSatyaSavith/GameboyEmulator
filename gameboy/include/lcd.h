@@ -2,7 +2,8 @@
 
 #include <common.h>
 
-typedef struct {
+typedef struct 
+{
     //registers...
     u8 lcdc;
     u8 lcds;
@@ -23,7 +24,8 @@ typedef struct {
 
 } lcd_context;
 
-typedef enum {
+typedef enum 
+{
     MODE_HBLANK,
     MODE_VBLANK,
     MODE_OAM,
@@ -47,7 +49,8 @@ lcd_context *lcd_get_context();
 #define LCDS_LYC (BIT(lcd_get_context()->lcds, 2))
 #define LCDS_LYC_SET(b) (BIT_SET(lcd_get_context()->lcds, 2, b))
 
-typedef enum {
+typedef enum 
+{
     SS_HBLANK = (1 << 3),
     SS_VBLANK = (1 << 4),
     SS_OAM = (1 << 5),
